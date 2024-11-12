@@ -1,0 +1,147 @@
+﻿@page "/PrefectureWrite"
+@using GASEC_RCA.Data
+@using GASEC_RCA.ServiceResultat
+@using GASEC_RCA.Service
+@using MatBlazor;
+@using MudBlazor;
+@inject RegionResultatService regionResultatService
+@inject PrefectureResultatService prefectureResultatService
+@inject PrefectureQuery PrefectureService
+@inject NavigationManager NavigationManager
+
+@* <h3>Region</h3>
+
+<hr/> *@
+
+<MudCard Elevation="2">
+	<MudGrid>
+		<MudItem xs="12">
+			<MudCardHeader>
+				<CardHeaderContent>
+					<MudText Typo="Typo.h6">Préfecture</MudText>
+				</CardHeaderContent>
+			</MudCardHeader>
+			<MudCardContent>
+
+@* 				<MudTable Items="objRegion" Hover="true" Dense="true" Class="mb-2">
+
+				</MudTable> *@
+
+				<form>
+					<div class="row">
+						<div class="col-md-6">
+
+							<p>
+								<div class="text-field-container">
+									<MudTextField @bind-Value="@objPrf.PRF_ID" Label="Id" FullWidth="true"></MudTextField>
+								</div>
+							</p>
+
+							<p>
+								<div class="text-field-container">
+									<MudTextField @bind-Value="@objPrf.PRF_NOM" Label="Préfecture" FullWidth="true"></MudTextField>
+								</div>
+							</p>
+
+							<p>
+								<div class="text-field-container">
+
+									<MudStack Row Class="justify-space-between mud-width-full">
+										<MudStack Style="width: 300px">
+											<MudSelect Label="Région" @bind-Value="objPrf.REG_ID"
+													   Margin="_margin"
+													   Dense="_dense"
+													   Disabled="_disabled"
+													   ReadOnly="_readonly"
+													   Placeholder="@(_placeholder ? "Placeholder" : null)"
+													   HelperText="@(_helperText ? "Helper Text" : null)"
+													   HelperTextOnFocus="_helperTextOnFocus"
+													   Clearable="_clearable">
+												@foreach (var prefecture in objRegion)
+												{
+													<MudSelectItem Value="prefecture.REG_ID">@prefecture.REG_NOM</MudSelectItem>
+
+													@* objPrf.REG_ID = prefecture.REG_ID; *@
+												}
+											</MudSelect>
+										</MudStack>
+									</MudStack>
+
+								</div>
+							</p>
+
+
+
+						</div>
+
+					</div>
+					<div class="row-mt-5">
+						<div class="col-md-4">
+							<div class="form-group">
+
+								<MudButtonGroup Color="Color.Tertiary" Size="Size.Large" Variant="Variant.Filled">
+									<MudButton @onclick=@CreatePrefecture>Créer</MudButton>
+								</MudButtonGroup>
+
+								<MudButtonGroup Color="Color.Secondary" Size="Size.Large" Variant="Variant.Filled">
+									<MudButton @onclick=@Cancel>Annuler</MudButton>
+								</MudButtonGroup>
+								@* 				<input type="button" class="btn btn-success" @onclick=@CreateRegion value="Céer"/>
+								<input type="button" class="btn btn-dark" @onclick=@Cancel value="Annuler" /> *@
+							</div>
+						</div>
+					</div>
+				</form>
+			</MudCardContent>
+		</MudItem>
+	</MudGrid>
+</MudCard>
+
+@code {
+
+	List<Region> objRegion = new List<Region>();
+
+	protected override async Task OnInitializedAsync()
+	{
+		objRegion = await Task.Run(() => regionResultatService.GetAllRegion());
+	}
+
+	Prefecture objPrf = new Prefecture();
+	protected void CreatePrefecture()
+	{
+		prefectureResultatService.create(objPrf);
+		NavigationManager.NavigateTo("/Prefecture/PrefecturePage");
+	}
+	void Cancel()
+	{
+		NavigationManager.NavigateTo("/Prefecture/PrefecturePage");
+	}
+
+
+	string _value;
+	Margin _margin;
+	bool _dense;
+	bool _disabled;
+	bool _readonly;
+	bool _placeholder;
+	bool _helperText;
+	bool _helperTextOnFocus;
+	bool _clearable;
+
+
+	// private string[] _states =
+	// {
+	// 	"Alabama", "Alaska", "Arizona", "Arkansas", "California",
+	// 	"Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
+	// 	"Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas",
+	// 	"Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts",
+	// 	"Michigan", "Minnesota", "Mississippi", "Missouri", "Montana",
+	// 	"Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",
+	// 	"New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma",
+	// 	"Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota",
+	// 	"Tennessee", "Texas", "Utah", "Vermont", "Virginia",
+	// 	"Washington", "West Virginia", "Wisconsin", "Wyoming"
+	// };
+
+
+}

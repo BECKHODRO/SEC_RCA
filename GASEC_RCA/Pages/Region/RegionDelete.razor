@@ -1,0 +1,58 @@
+﻿@page "/RegionDelete/{CurrentID}"
+
+@using GASEC_RCA.Data
+@using GASEC_RCA.ServiceResultat
+@using System;
+@inject RegionResultatService objRegionResultatService
+@inject NavigationManager NavigationManager
+
+<h2>RegionDelete</h2>
+<hr />
+<h3>Etes-vous sur de vouloir supprimer ceci ?</h3>
+
+<div class="row">
+	<div class="col-md-8">
+
+		<div class="form-group">
+			<label>ID : </label>
+			<label>@objRI.REG_ID</label>
+		</div>
+
+		<div class="form-group">
+			<label>NOM : </label>
+			<label>@objRI.REG_NOM</label>
+		</div>
+
+	</div>
+</div> 
+
+<div class="row-mt-5">
+	<div class="col-md-4">
+		<div class="form-group">
+			<input type="button" class="btn btn-primary" @onclick=@DeleteRegion value="Supprimer" />
+			<input type="button" class="btn btn-dark" @onclick=@Cancel value="Annuler" />
+		</div>
+	</div>
+</div>
+
+
+@code {
+	[Parameter]
+	public string CurrentID{ get; set; }
+	Region objRI = new Region();
+	protected override async Task OnInitializedAsync()
+	{
+		objRI = objRegionResultatService.GetRegionByID(Convert.ToInt32(CurrentID));
+	}
+
+	protected void DeleteRegion()
+	{
+		objRegionResultatService.DeleteRegion(objRI);
+		NavigationManager.NavigateTo("/Region/RegionPage");
+	}
+
+	void Cancel()
+	{
+		NavigationManager.NavigateTo("/Region/RegionPage");
+	}
+}

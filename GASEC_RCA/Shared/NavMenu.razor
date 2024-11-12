@@ -1,0 +1,128 @@
+﻿@* <div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">GASEC_RCA</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<nav class="">
+
+</nav>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="counter">
+                <span class="oi oi-plus" aria-hidden="true"></span> Counter
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="fetchdata">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+            </NavLink>
+        </li>
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" @onclick="()=>SousMenuStructure= !SousMenuStructure">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Options
+            </NavLink>
+            @if (SousMenuStructure)
+            {
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="expand-menu" href="RegionPage">
+                            <span class=" oi oi-cart" aria-hidden="true"></span> Region
+                        </NavLink>
+                    </li>
+                </ul>
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="expand-menu" href="#">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> Préfecture
+                        </NavLink>
+                    </li>
+                </ul>
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="expand-menu" href="#">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> Sous Préfecture
+                        </NavLink>
+                    </li>
+                </ul>
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="expand-menu" href="#">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> Communes
+                        </NavLink>
+                    </li>
+                </ul>
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="expand-menu" href="#">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> Arrondissement
+                        </NavLink>
+                    </li>
+                </ul>
+
+            }
+        </li>
+    </ul>
+</div> *@
+
+@* <MudNavMenu>
+    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.House">Home</MudNavLink>
+    <MudNavLink Href="/counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Calculate">Counter</MudNavLink>
+</MudNavMenu> *@
+
+
+<MudPaper Width="250px" Class="py-3" Elevation="0">
+    <MudNavMenu>
+        <MudText Typo="Typo.h6" Class="px-4">MENU</MudText>
+        <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">@* Secondary Text *@</MudText>
+        <MudDivider Class="my-2" />
+        <MudNavLink Href="/Index" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.House" Class="px-4 mud-text-Terti">Tableau de Bord</MudNavLink>
+        <MudNavLink Href="/counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Calculate">Counter</MudNavLink>
+        <MudNavLink Href="/fetchdata" Disabled="true">Fetch data</MudNavLink>
+
+        <MudNavGroup Title="Etat-Civil" Expanded="true" Icon="@Icons.Material.Filled.EscalatorWarning">
+            <MudNavLink Href="/ActesNaissance/ActesNaissancePage" Icon="@Icons.Material.Filled.BabyChangingStation">Actes de Naissance</MudNavLink>
+            <MudNavLink Href="/ActesMariage/ActesMariagePage" Icon="@Icons.Material.Filled.Wc">Actes de Mariage</MudNavLink>
+            <MudNavLink Href="/ActesDeces/ActesDecesPage" Icon="@Icons.Material.Filled.AirlineSeatIndividualSuite">Actes de Décès</MudNavLink>
+        </MudNavGroup>
+
+        <MudNavGroup Title="Géographie" Expanded="true" Icon="@Icons.Material.Filled.LocationOn">
+            <MudNavLink Href="/Region/RegionPage" Icon="@Icons.Material.Filled.Map">Régions</MudNavLink>
+            <MudNavLink Href="/Prefecture/PrefecturePage" Icon="@Icons.Material.Filled.Apartment">Préfectures</MudNavLink>
+            <MudNavLink Href="/SousPrefecturePage" Icon="@Icons.Material.Filled.LocationCity">Sous-Préfecture</MudNavLink>
+            <MudNavLink Href="/CommunePage" Icon="@Icons.Material.Filled.MapsHomeWork">Commune</MudNavLink>
+            <MudNavLink Href="/ArrondissementtPage" Icon="@Icons.Material.Filled.AccountBalance">Arrondissemnt</MudNavLink>
+        </MudNavGroup>
+
+        <MudNavGroup Title="Administration" Expanded="true" Icon="@Icons.Material.Filled.AdminPanelSettings">
+            <MudNavLink Href="/Role/RolePage" Icon="@Icons.Material.Filled.Groups">Roles</MudNavLink>
+            <MudNavLink Href="/Utilisateur/UtilisateurPage" Icon="@Icons.Material.Filled.AccountCircle">Utilisateurs</MudNavLink>
+            <MudNavLink Href="/Action/ActionPage" Icon="@Icons.Material.Filled.VerifiedUser">Actions</MudNavLink>
+        </MudNavGroup>
+
+        <MudNavLink Href="/about">About</MudNavLink>
+    </MudNavMenu>
+</MudPaper>
+
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    private bool SousMenuStructure;
+}

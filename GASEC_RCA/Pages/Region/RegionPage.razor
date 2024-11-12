@@ -1,0 +1,325 @@
+﻿@page "/Region/RegionPage"
+@using GASEC_RCA.Data
+@using GASEC_RCA.ServiceResultat
+@using GASEC_RCA.Service
+@using MatBlazor;
+@using MudBlazor;
+@inject RegionResultatService regionResultatService
+@* @inject RegionService regionService *@
+@inject MudBlazor.ISnackbar snackbar
+@inject NavigationManager NavigationManager
+
+@* <NavLink class="nav-link" href="RegionSaisie">
+	<span class="oi oi-plus" aria-hidden="true"></span> Créer
+</NavLink> *@
+
+<MudCard Elevation="20">
+	<MudGrid>
+		<MudItem xs="4">
+			<MudCardHeader>
+				<CardHeaderContent>
+					<MudText Typo="Typo.h6">Region</MudText>
+				</CardHeaderContent>
+			</MudCardHeader>
+			<MudCardContent>
+
+				<MudButtonGroup Color="Color.Tertiary" Size="Size.Large" Variant="Variant.Filled">
+					<a href="RegionSaisie"><span>
+							<MudButton>Créer</MudButton>
+					</span></a>					
+					@* <MudButton @onclick="Showpop">Créer</MudButton> *@
+@* 					<MudButton>Two</MudButton>
+					<MudButton>Three</MudButton> *@
+				</MudButtonGroup>
+
+@* 				<div>
+					<div>
+						<h4>Region</h4>
+					</div>
+
+						<button class="btn-primary" @onclick="Showpop">
+					Add Record
+					</button>
+
+					<div>
+						<NavLink class="nav-link" >
+							<MudButton Outlined="true" Theme="theme3" @onclick="Showpop" >
+								<span class="oi oi-plus" aria-hidden="true"></span> Créer
+							</MudButton>
+						</NavLink>
+					</div>
+				</div> *@
+			</MudCardContent>
+		</MudItem>
+	</MudGrid>
+</MudCard>
+<br />
+
+@if (objRegion == null)
+{
+	<p><em> Loading...</em></p>
+}
+else
+{
+	<MudTable Elevation="10" Items="objRegion" Filter="new Func<Region, bool>(FilterCycleCheck)" @bind-customer="objRegion" Hover="@hover" Dense="@dense">
+		<ToolBarContent>
+			<MudText Typo="Typo.h6">@* Region *@</MudText>
+			@* <MudToolBarSpacer/> *@
+			<MudTextField @bind-Value="@searchterm" Placeholder="Recherche région" Adornment="Adornment.Start"
+						  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="small"></MudTextField>
+		</ToolBarContent>
+
+		<HeaderContent>
+			<MudTh>ID</MudTh>
+			<MudTh>NOM</MudTh>
+			<MudTh>MODIF</MudTh>
+			<MudTh>SUPPR</MudTh>
+			@* <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Region, object>(x=>x.REG_NOM)">NOM</MudTableSortLabel></MudTh> *@
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="ID">@context.REG_ID</MudTd>
+			<MudTd DataLabel="NOM">@context.REG_NOM</MudTd>
+
+			<MudTd DataLabel="NOM">
+
+				<a href="RegionEdit/@context.REG_ID">
+					<span>
+						<MudFab Color="Color.Tertiary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+					</span>
+				</a>
+
+				@* <MudFab @onclick="@(() => Edit(context.REG_ID))" Color="Color.Tertiary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" /> *@
+				
+			</MudTd>
+
+			<MudTd DataLabel="NOM">
+
+				<a href="RegionDelete/@context.REG_ID">
+					<span>
+						<MudFab  Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+						
+					</span>
+				</a>
+				
+			</MudTd>
+
+@* 			<td class="col-sm-2">
+				<MudButton Outlined="true">
+					<a class="w-50" style="padding:50px;color:red;">
+						<span class="oi oi-trash" aria-hidden="true">Edit</span>
+					</a>
+				</MudButton>
+			</td>
+			<td class="btn-danger">Suppr</td> *@
+
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager PageSizeOptions="new int[]{1,2,3,4,5,6,8,9,10,20,30,40,50,60,60,70,80,90,100,1000}" />
+		</PagerContent>
+
+	</MudTable>
+}
+
+
+@* @if (popup)
+{
+	<EditForm Model="objRi" OnValidSubmit="CreateRegion">
+		<div class="modal" tabindex="-1" style="display:block;">
+			<div class="modal-dialog modal-dialog modal-xl">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">REGION</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="Closepop">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<table class="table">
+							<tr>
+								<td><MudTextField @bind-Value="@objRi.REG_ID" Label="ID" FullWidth="true"></MudTextField></td>
+								<td><MudTextField @bind-Value="@objRi.REG_NOM" Label="NOM" FullWidth="true"></MudTextField></td>
+							</tr>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary" @onclick="Closepop">Créer</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</EditForm>
+	@* <div class="modal" tabindex="-1" style="display:block;">
+		<div class="modal-dialog modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">REGION</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="Closepop">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<table class="table">
+						<tr>
+							<td><MudTextField @bind-Value="@objRi.REG_ID" Label="ID" FullWidth="true"></MudTextField></td>
+							<td><MudTextField @bind-Value="@objRi.REG_NOM" Label="NOM" FullWidth="true"></MudTextField></td>
+						</tr>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary" @onclick="CreateRegion">Créer</button>
+				</div>
+			</div>
+		</div>
+	</div> *@
+}
+
+
+@* @if(objRegion == null)
+{
+	<p><em> Loading...</em></p>
+}
+else
+{
+
+	<MatTable Items="@objRegion" Class="mat-elevation-z5" AllowSelection="true"
+			  FilterByColumnName="REGION">
+		<MatTableHeader>
+			<th class="col-sm-2"> ID </th>
+			<th class="col-sm-2"> REGION </th>
+			<th class="col-sm-2"> MODIFIER </th>
+			<th class="col-sm-2"> SUPPRIMER </th>
+		</MatTableHeader>
+		<MatTableRow>
+			<td class="col-sm-2">@context.REG_ID</td>
+			<td class="col-sm-2">@context.REG_NOM</td>
+
+			<td class="col-sm-2">
+
+				<MatButton Outlined="true" Theme="@btnPrimary">
+					<a class="w-50" href="RegionEdit/@context.REG_ID">
+						<span class="oi oi-pencil" aria-hidden="true">Edit</span>
+					</a>					
+				</MatButton>
+			</td>
+
+			<td class="col-sm-2">
+				<MatButton Outlined="true" Theme="@theme2">
+					<a class="w-50" style="padding:50px;color:red;" href="RegionDelete/@context.REG_ID">
+						<span class="oi oi-trash" aria-hidden="true">Edit</span>
+					</a>					
+				</MatButton>
+			</td>
+
+
+		</MatTableRow>
+	</MatTable> *@
+
+
+
+	@* <table class="table">
+		<thead>
+			<tr class="row">
+				<th class="col-sm-2"> ID </th>
+				<th class="col-sm-2"> REGION </th>
+				<th class="col-sm-2"> MODIFIER </th>
+				<th class="col-sm-2"> SUPPRIMER </th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach(var temp in objRegion)
+			{
+				<tr class="row">
+					<td class="col-sm-2">@temp.REG_ID</td>
+					<td class="col-sm-2">@temp.REG_NOM</td>
+
+					<td class="col-sm-2">
+						<a class="w-50" href="RegionEdit/@temp.REG_ID"><span class="oi oi-pencil" aria-hidden="true">Edit</span></a>
+					</td>
+
+					<td class="col-sm-2">
+						<a class="w-50" style="padding:50px;color:red;" href="RegionDelete/@temp.REG_ID"><span class="oi oi-trash" aria-hidden="true">Delete</span></a>
+					</td>
+
+				</tr>
+			}
+		</tbody>
+	</table> 
+} *@
+
+@code {
+
+	private bool hover;
+	private bool dense;
+
+	string searchterm = "";
+
+	List<Region> objRegion = new List<Region>();
+
+	protected override async Task OnInitializedAsync()
+	{
+		objRegion = await Task.Run(() => regionResultatService.GetAllRegion());
+	}
+
+	// MatTheme btnPrimary = new MatTheme()
+	// 	{
+	// 		Primary = MatThemeColors.Orange._500.Value,
+	// 		Secondary = MatThemeColors.Green._500.Value
+	// 	};
+
+	// MatTheme theme2 = new MatTheme()
+	// 	{
+	// 		Primary = "green",
+	// 		Secondary = "orange"
+	// 	};
+
+	// MatTheme theme3 = new MatTheme()
+	// 	{
+	// 		// Primary = MatThemeColors.Orange._500.Value,
+	// 		Secondary = MatThemeColors.Green._100.Value
+	// 	};
+
+
+	bool popup = false;
+
+	void Showpop()
+	{
+		popup = true;
+	}
+
+	void Closepop()
+	{
+		popup = false;
+	}
+
+	// Region objRi = new Region();
+	// protected void CreateRegion()
+	// {
+	// 	regionResultatService.create(objRi);
+	// 	Closepop();
+	// 	NavigationManager.NavigateTo("RegionPage");
+	// }
+
+	private bool FilterCycleCheck(Region regionItem)
+	{
+		if(regionItem.REG_NOM.Contains(searchterm))
+		{
+			return true;
+		}
+		return false;
+	}
+
+
+	//Modifaction
+
+	// private void Edit(Int64 id)
+	// {
+	// 	objRi = objRegion.FirstOrDefault(c => c.REG_ID == id);
+	// }
+
+	// private void Delete(Int64 id)
+	// {
+	// 	objRi = objRegion.FirstOrDefault(c => c.REG_ID == id);
+	// 	regionResultatService.DeleteRegion(objRi);
+	// }
+
+}

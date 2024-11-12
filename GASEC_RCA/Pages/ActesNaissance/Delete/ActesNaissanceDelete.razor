@@ -1,0 +1,58 @@
+﻿@page "/Delete/ActesNaissanceDelete/{CurrentID}"
+
+@using GASEC_RCA.Data
+@using GASEC_RCA.ResultatService
+@using System;
+@inject ActesNaissResultatService objActesNaissResultatService
+@inject NavigationManager NavigationManager
+
+<h2>Suppression Actes de Naissances</h2>
+<hr />
+<h3>Etes-vous sur de vouloir supprimer ceci ?</h3>
+
+<div class="row">
+	<div class="col-md-8">
+
+		<div class="form-group">
+			<label>ID : </label>
+			<label>@objActNaiss.PERS_ID</label>
+		</div>
+
+		<div class="form-group">
+			<label>NOM : </label>
+			<label>@objActNaiss.PERS_NOM_COMPLET</label>
+		</div>
+
+	</div>
+</div>
+
+<div class="row-mt-5">
+	<div class="col-md-4">
+		<div class="form-group">
+			<input type="button" class="btn btn-primary" @onclick=@DeleteActesNaiss value="Supprimer" />
+			<input type="button" class="btn btn-dark" @onclick=@Cancel value="Annuler" />
+		</div>
+	</div>
+</div>
+
+
+@code {
+	[Parameter]
+	public string CurrentID { get; set; }
+	ActesDeNaissance objActNaiss = new ActesDeNaissance();
+	protected override async Task OnInitializedAsync()
+	{
+		objActNaiss = objActesNaissResultatService.GetActesDeNaissanceByID(Convert.ToInt32(CurrentID));
+	}
+
+	protected void DeleteActesNaiss()
+	{
+		objActesNaissResultatService.Delete(objActNaiss);
+		NavigationManager.NavigateTo("/ActesNaissance/ActesNaissancePage");
+	}
+
+	void Cancel()
+	{
+		NavigationManager.NavigateTo("/ActesNaissance/ActesNaissancePage");
+	}
+}

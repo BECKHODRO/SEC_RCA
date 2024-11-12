@@ -1,0 +1,129 @@
+﻿@page "/ActesNaissance/ActesNaissancePage"
+@using GASEC_RCA.Data
+@using GASEC_RCA.ResultatService
+@using GASEC_RCA.Service
+@using MatBlazor;
+@using MudBlazor;
+@inject ActesNaissResultatService actesResultatService
+@inject ActesNaissService acteService
+@inject MudBlazor.ISnackbar snackbar
+@inject NavigationManager NavigationManager
+
+
+<MudCard Elevation="20">
+	<MudGrid>
+		<MudItem xs="4">
+			<MudCardHeader>
+				<CardHeaderContent>
+					<MudText Typo="Typo.h6">Actes de Naissances</MudText>
+				</CardHeaderContent>
+			</MudCardHeader>
+			<MudCardContent>
+				<MudButtonGroup Color="Color.Tertiary" Size="Size.Large" Variant="Variant.Filled">
+					<a href="/Create/ActesNaissSaisie1">
+						<span>
+							<MudButton>Créér</MudButton>
+						</span>
+					</a>
+				</MudButtonGroup>
+			</MudCardContent>
+		</MudItem>
+	</MudGrid>
+</MudCard>
+<br />
+
+
+@if (objPersonne == null)
+{
+	<p><em> Loading...</em></p>
+}
+else
+{
+	<MudTable Elevation="10" Items="objPersonne" Filter="new Func<ActesDeNaissance, bool>(FilterCycleCheck)" @bind-customer="objPersonne" Hover="@hover" Dense="@dense">
+		<ToolBarContent>
+			<MudText Typo="Typo.h6">@* Region *@</MudText>
+			<MudTextField @bind-Value="@searchterm" Placeholder="Recherche Personne" Adornment="Adornment.Start"
+						  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="small"></MudTextField>
+		</ToolBarContent>
+
+		<HeaderContent>
+
+			<MudTh>ID</MudTh>
+			<MudTh>NOM(S)</MudTh>
+			<MudTh>PRENOM(S)</MudTh>
+			<MudTh>SEXE</MudTh>
+			<MudTh>DATE NAISSANCE</MudTh>
+			<MudTh>HEURE NAISSANCE</MudTh>
+			<MudTh>LIEU DE NAISSANCE</MudTh>
+			@* 			<MudTh>NOM(S) PERE</MudTh>
+		<MudTh>NOM(S) MERE</MudTh> *@
+
+			<MudTh>MODIF</MudTh>
+			<MudTh>SUPPR</MudTh>
+
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="ID">@context.PERS_ID</MudTd>
+			<MudTd DataLabel="NOM">@context.PERS_NOM</MudTd>
+			<MudTd DataLabel="PRENOM">@context.PERS_PRENOM</MudTd>
+			<MudTd DataLabel="SEXE">@context.ACT_SEXE</MudTd>
+			<MudTd DataLabel="DATE NAISSANCE">@context.PERS_DATE_NAISS</MudTd>
+			<MudTd DataLabel="HEURE">@context.ACT_HEURE_NAISS</MudTd>
+			<MudTd DataLabel="LIEU NAISSANCE">@context.PERS_LIEU_NAISS</MudTd>
+			@* 			<MudTd DataLabel="NOM PERE">@context.ACT_NOM_COMPLET_PERE</MudTd>
+		<MudTd DataLabel="NOM MERE">@context.ACT_NOM_COMPLET_MERE</MudTd> *@
+
+			<MudTd DataLabel="NOM">
+				<a href="/Update/ActesNaissModif/@context.PERS_ID">
+					<span>
+						<MudFab Color="Color.Tertiary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+					</span>
+				</a>
+			</MudTd>
+
+			<MudTd DataLabel="NOM">
+
+				<a href="/Delete/ActesNaissanceDelete/@context.PERS_ID">
+					<span>
+						<MudFab Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+
+					</span>
+				</a>
+
+			</MudTd>
+
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager PageSizeOptions="new int[]{1,2,3,4,5,6,8,9,10,20,30,40,50,60,60,70,80,90,100,1000}" />
+		</PagerContent>
+
+	</MudTable>
+}
+
+
+@code {
+
+	private bool hover;
+	private bool dense;
+
+	string searchterm = "";
+
+	List<ActesDeNaissance> objPersonne = new List<ActesDeNaissance>();
+
+	protected override async Task OnInitializedAsync()
+	{
+		objPersonne = await Task.Run(() => actesResultatService.GetAllActesNaissance());
+	}
+
+	private bool FilterCycleCheck(ActesDeNaissance acteNaissItem)
+	{
+		if (acteNaissItem.PERS_NOM_COMPLET.Contains(searchterm))
+		{
+			return true;
+		}
+		return false;
+	}
+
+}
+
+

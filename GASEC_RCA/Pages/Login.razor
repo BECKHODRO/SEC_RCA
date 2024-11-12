@@ -1,0 +1,294 @@
+﻿@page "/"
+
+@layout LoginLayout
+
+@using GASEC_RCA.Data
+@using GASEC_RCA.ResultatService
+@using GASEC_RCA.Service
+@using MatBlazor;
+@using MudBlazor;
+@inject AuthentificationResultatService authentificationResultatService
+@inject AuthentificationService authentificationService
+
+@inject ZoneResultatService zoneResultatService
+@inject ZoneService zoneServices
+
+@inject MudBlazor.ISnackbar snackbar
+@inject NavigationManager navigationManager
+@inject SessionState sessionsState
+
+<section class="vh-100" style="background-color: lightgray">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-50">
+            <div class="col col-xl-9">
+                <div class="card" style="border-radius: 1rem;">
+                    <div class="row g-0">
+                        <div class="col-md-10 col-lg-5 d-none d-md-block">
+                            <img src="assets/img/image002.jpg"
+                                 alt="login form" class="img-fluid" style="border-radius: 1rem 0 0 1rem;" />
+                        </div>
+                        <div class="col-md-6 col-lg-7 d-flex align-items-center">
+                            <div class="card-body p-4 p-lg-5 text-black">
+
+                                <EditForm Model="@authentification" OnValidSubmit="Submit">
+
+                                    <div class="d-flex align-items-center mb-3 pb-1">
+                                        <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
+                                        <span class="h4 fw-bold mb-0">Identifiez-Vous</span>
+                                    </div>
+
+                                    <h6 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Profil Utilisateur</h6>
+
+                                    <div data-mdb-input-init class="form-outline mb-6">
+                                        @* <MudTextField @bind-Value="authentification.UTIL_ID" Label="Identifiant" FullWidth="true" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField> *@
+                                        <MudTextField ShrinkLabel @bind-Value="authentification.UTIL_LOGIN" Label="Nom utilisateur" Variant="Variant.Outlined"></MudTextField>
+                                        @* <MudTextField ShrinkLabel @bind-Value="authentification.UTIL_ID" Label="Identifiant" Variant="Variant.Outlined"></MudTextField> *@
+@*                                         <input type="email" id="form2Example17" class="form-control form-control-lg" />
+                                        <label class="form-label" for="form2Example17">Email address</label> *@
+                                    </div>
+
+                                    <div data-mdb-input-init class="form-outline mb-6">
+                                        @* <MudTextField @bind-Value="authentification.UTIL_PWD" Label="Mot de passe" FullWidth="true" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField> *@
+                                        @* <MudTextField @bind-Value="authentification.UTIL_PWD" Label="Mot de passe" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" /> *@
+                                        <MudTextField @bind-Value="authentification.UTIL_PWD" Label="Mot de passe" FullWidth="true" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
+@*                                         <input type="password" id="form2Example27" class="form-control form-control-lg" />
+                                        <label class="form-label" for="form2Example27">Password</label> *@
+                                    </div>
+
+                                    <div class="pt-1 mb-4">
+                                        <MudButton ButtonType="ButtonType.Submit" Color="Color.Tertiary" Variant="Variant.Filled" Size="Size.Large" FullWidth="true">Connecter</MudButton>
+                                        @* <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-success btn-lg btn-block" type="submit">Login</button> *@
+                                    </div>
+
+                                    <a class="small text-muted" href="#!">Mot de passe oublié ?</a>
+@*                                     <p class="mb-5 pb-lg-2" style="color: #393f81;">
+                                        Don't have an account? <a href="#!" style="color: #393f81;">Register here</a>
+                                    </p> *@
+
+                                    <div class="pt-1 mb-2">
+                                        <a href="#!" class="small text-muted">Conditions d'utilisation.</a>
+                                        <br />
+                                        <a href="#!" class="small text-muted">Politique de confidentialité</a>
+                                    </div>
+
+@*                                     <div class="pt-1 mb-4">
+                                        
+                                    </div> *@
+
+                                    <div class="pt-1 mb-2">
+                                        <a href="#!" class="small text-muted">Tous droits reservés</a>
+                                    </div>
+                                    
+                                </EditForm>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@* <form>
+    <!-- Email input -->
+    <div data-mdb-input-init class="form-outline mb-4">
+        <input type="email" id="form2Example1" class="form-control" />
+        <label class="form-label" for="form2Example1">Email address</label>
+    </div>
+
+    <!-- Password input -->
+    <div data-mdb-input-init class="form-outline mb-4">
+        <input type="password" id="form2Example2" class="form-control" />
+        <label class="form-label" for="form2Example2">Password</label>
+    </div>
+
+    <!-- 2 column grid layout for inline styling -->
+    <div class="row mb-4">
+        <div class="col d-flex justify-content-center">
+            <!-- Checkbox -->
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="form2Example31" checked />
+                <label class="form-check-label" for="form2Example31"> Remember me </label>
+            </div>
+        </div>
+
+        <div class="col">
+            <!-- Simple link -->
+            <a href="#!">Forgot password?</a>
+        </div>
+    </div>
+
+    <!-- Submit button -->
+    <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Sign in</button>
+
+    <!-- Register buttons -->
+    <div class="text-center">
+        <p>Not a member? <a href="#!">Register</a></p>
+        <p>or sign up with:</p>
+        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
+            <i class="fab fa-facebook-f"></i>
+        </button>
+
+        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
+            <i class="fab fa-google"></i>
+        </button>
+
+        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
+            <i class="fab fa-twitter"></i>
+        </button>
+
+        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
+            <i class="fab fa-github"></i>
+        </button>
+    </div>
+</form> *@
+
+
+@code {
+    Authentification authentification = new Authentification();
+
+    static List<Authentification> authentificationList = new List<Authentification>();
+
+    string message;
+
+    public double? Amount { get; set; }
+    public int? Weight { get; set; }
+    public string Password { get; set; } = "superstrong123";
+
+    bool isShow;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void ButtonTestclick()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        sessionsState.sessionEtat = 0;
+        sessionsState.sessionNom = null;
+    }
+
+    protected override void OnParametersSet()
+    {
+        authentificationList = authentificationService.GetAllAuthentification();
+    }
+
+    List<Zone> objZone = new List<Zone>();
+
+    private void Zone(Int64 codeGeo, Int64 codeZone)
+    {
+
+    }
+
+    private void Submit()
+    {
+        if (authentificationList.Any(a => a.UTIL_LOGIN.Equals(authentification.UTIL_LOGIN) && a.UTIL_PWD.Equals(authentification.UTIL_PWD)))
+        {
+
+            sessionsState.sessionLogin = authentification.UTIL_LOGIN;
+            sessionsState.sessionEtat = 1;
+
+            foreach(var nom in authentificationList)
+            {
+                if (nom.UTIL_LOGIN == sessionsState.sessionLogin)
+                {
+                    sessionsState.sessionIdUser = nom.UTIL_ID;
+                    sessionsState.sessionIdGeo = nom.GEO_ID;
+                    sessionsState.sessionIdZone = nom.CODE_ZONE;
+                    sessionsState.sessionNom = nom.UTIL_NOM_COMPLET;
+                }                
+            }
+
+            if (sessionsState.sessionIdGeo == 6)
+            {
+                objZone = authentificationResultatService.GetAllZoneCEC();
+            }
+
+            
+
+            @foreach (var geographie in objZone)
+            {
+                if (sessionsState.sessionIdGeo == 6)
+                {
+                    sessionsState.sessionIdCEC = geographie.ZONE_CODE;
+                    sessionsState.sessionNomCEC = geographie.ZONE_NOM;
+                }
+
+
+                // if (value == geographie.GEO_NOM)
+                // {
+                //     if (value == "Régions")
+                //     {
+                //         objUtilisateur.GEO_NOM = geographie.GEO_NOM;
+                //         objUtilisateur.GEO_ID = geographie.GEO_ID;
+                //         objZone = zoneResultatService.GetAllZoneRegion();
+                //     }
+
+                //     if (value == "Préfectures")
+                //     {
+                //         objUtilisateur.GEO_NOM = geographie.GEO_NOM;
+                //         objUtilisateur.GEO_ID = geographie.GEO_ID;
+                //         objZone = zoneResultatService.GetAllZonePrefecture();
+                //     }
+
+                //     if (value == "Sous Préfectures")
+                //     {
+                //         objUtilisateur.GEO_NOM = geographie.GEO_NOM;
+                //         objUtilisateur.GEO_ID = geographie.GEO_ID;
+                //         objZone = zoneResultatService.GetAllZoneSousPrefecture();
+                //     }
+
+                //     if (value == "Communes")
+                //     {
+                //         objUtilisateur.GEO_NOM = geographie.GEO_NOM;
+                //         objUtilisateur.GEO_ID = geographie.GEO_ID;
+                //         objZone = zoneResultatService.GetAllZoneCommune();
+                //     }
+
+                //     if (value == "Arrondissements")
+                //     {
+                //         objUtilisateur.GEO_NOM = geographie.GEO_NOM;
+                //         objUtilisateur.GEO_ID = geographie.GEO_ID;
+                //         objZone = zoneResultatService.GetAllZoneArrdt();
+                //     }
+
+                //     if (value == "Centre Etat Civil")
+                //     {
+                //         objUtilisateur.GEO_NOM = geographie.GEO_NOM;
+                //         objUtilisateur.GEO_ID = geographie.GEO_ID;
+                //         objZone = zoneResultatService.GetAllZoneCEC();
+                //     }
+
+                // }
+            }
+
+            // Zone(sessionsState.sessionIdGeo, sessionsState.sessionIdZone);
+
+
+            if (sessionsState.sessionIdGeo == 6)
+            {
+                // GetAllZoneCEC
+            }
+
+            navigationManager.NavigateTo("/Index");
+        }
+        else
+        {
+            message = "Votre identifiant n'est pas correcte";
+        }
+    }
+}

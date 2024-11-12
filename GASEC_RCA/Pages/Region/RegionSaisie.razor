@@ -1,0 +1,75 @@
+﻿@page "/RegionSaisie"
+@using GASEC_RCA.Data
+@using GASEC_RCA.ServiceResultat
+@using GASEC_RCA.Service
+@using MatBlazor
+@inject RegionResultatService regionResultatService
+@inject RegionService regionService
+@inject NavigationManager NavigationManager
+
+@* <h3>Region</h3>
+
+<hr/> *@
+
+<MudCard Elevation="2">
+	<MudGrid>
+		<MudItem xs="12">
+			<MudCardHeader>
+				<CardHeaderContent>
+					<MudText Typo="Typo.h6">Region</MudText>
+				</CardHeaderContent>
+			</MudCardHeader>
+			<MudCardContent>
+				<form>
+					<div class="row">
+						<div class="col-md-6">
+
+							<p>
+								<div class="text-field-container">
+									<MudTextField @bind-Value="@objRi.REG_ID" Label="ID" FullWidth="true"></MudTextField>
+								</div>
+							</p>
+
+							<p>
+								<div class="text-field-container">
+									<MudTextField @bind-Value="@objRi.REG_NOM" Label="NOM" FullWidth="true"></MudTextField>
+								</div>
+							</p>
+
+						</div>
+
+					</div>
+					<div class="row-mt-5">
+						<div class="col-md-4">
+							<div class="form-group">
+
+								<MudButtonGroup Color="Color.Tertiary" Size="Size.Large" Variant="Variant.Filled">
+									<MudButton @onclick=@CreateRegion>Créer</MudButton>
+								</MudButtonGroup>
+
+								<MudButtonGroup Color="Color.Secondary" Size="Size.Large" Variant="Variant.Filled">
+									<MudButton @onclick=@Cancel>Annuler</MudButton>
+								</MudButtonGroup>
+								@* 				<input type="button" class="btn btn-success" @onclick=@CreateRegion value="Céer"/>
+								<input type="button" class="btn btn-dark" @onclick=@Cancel value="Annuler" /> *@
+							</div>
+						</div>
+					</div>
+				</form>
+			</MudCardContent>
+		</MudItem>
+	</MudGrid>
+</MudCard>
+
+@code {
+	Region objRi = new Region();
+	protected void CreateRegion()
+	{
+		regionResultatService.create(objRi);
+		NavigationManager.NavigateTo("/Region/RegionPage");
+	}
+	void Cancel()
+	{
+		NavigationManager.NavigateTo("/Region/RegionPage");
+	}
+}

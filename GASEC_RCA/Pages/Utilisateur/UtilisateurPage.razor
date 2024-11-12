@@ -1,0 +1,118 @@
+﻿@page "/Utilisateur/UtilisateurPage"
+@using GASEC_RCA.Data
+@using GASEC_RCA.ResultatService
+@using GASEC_RCA.Service
+@using MatBlazor;
+@using MudBlazor;
+@inject UtilisateurResultatService utilisateurResultatService
+@inject UtilisateurService utilisateurService
+@inject MudBlazor.ISnackbar snackbar
+@inject NavigationManager NavigationManager
+
+
+<MudCard Elevation="20">
+	<MudGrid>
+		<MudItem xs="4">
+			<MudCardHeader>
+				<CardHeaderContent>
+					<MudText Typo="Typo.h6">Utilisateurs</MudText>
+				</CardHeaderContent>
+			</MudCardHeader>
+			<MudCardContent>
+				<MudButtonGroup Color="Color.Tertiary" Size="Size.Large" Variant="Variant.Filled">
+					<a href="UtilisateurSaisie">
+						<span>
+							<MudButton>Créer</MudButton>
+						</span>
+					</a>
+				</MudButtonGroup>
+			</MudCardContent>
+		</MudItem>
+	</MudGrid>
+</MudCard>
+<br />
+
+
+@if (objUtilisateur == null)
+{
+	<p><em> Loading...</em></p>
+}
+else
+{
+	<MudTable Elevation="10" Items="objUtilisateur" Filter="new Func<Utilisateur, bool>(FilterCycleCheck)" @bind-customer="objUtilisateur" Hover="@hover" Dense="@dense">
+		<ToolBarContent>
+			<MudText Typo="Typo.h6">@* Region *@</MudText>
+			<MudTextField @bind-Value="@searchterm" Placeholder="Recherche utilisateur" Adornment="Adornment.Start"
+						  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="small"></MudTextField>
+		</ToolBarContent>
+
+		<HeaderContent>
+			<MudTh>ID</MudTh>
+			<MudTh>NOM-PRENOM</MudTh>
+			<MudTh>LOGIN</MudTh>
+			<MudTh>EMAIL</MudTh>
+			<MudTh>ROLE</MudTh>
+			<MudTh>MODIF</MudTh>
+			<MudTh>SUPPR</MudTh>
+
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="ID">@context.UTIL_ID</MudTd>
+			<MudTd DataLabel="NOM">@context.UTIL_NOM_COMPLET</MudTd>
+			<MudTd DataLabel="LOGIN">@context.UTIL_LOGIN</MudTd>
+			<MudTd DataLabel="EMAIL">@context.UTIL_EMAIL</MudTd>
+			<MudTd DataLabel="ROLE">@context.RLE_NOM</MudTd>
+
+			<MudTd DataLabel="NOM">
+				<a href="PrefectureEdit/@context.UTIL_ID">
+					<span>
+						<MudFab Color="Color.Tertiary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+					</span>
+				</a>
+			</MudTd>
+
+			<MudTd DataLabel="NOM">
+
+				<a href="PrefectureDelete/@context.UTIL_ID">
+					<span>
+
+						<MudFab Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+
+					</span>
+				</a>
+
+			</MudTd>
+
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager PageSizeOptions="new int[]{1,2,3,4,5,6,8,9,10,20,30,40,50,60,60,70,80,90,100,1000}" />
+		</PagerContent>
+
+	</MudTable>
+}
+
+
+@code {
+
+	private bool hover;
+	private bool dense;
+
+	string searchterm = "";
+
+	List<Utilisateur> objUtilisateur = new List<Utilisateur>();
+
+	protected override async Task OnInitializedAsync()
+	{
+		objUtilisateur = await Task.Run(() => utilisateurResultatService.GetAllUtilisateur());
+	}
+
+	private bool FilterCycleCheck(Utilisateur utilisateurItem)
+	{
+		if (utilisateurItem.UTIL_NOM_COMPLET.Contains(searchterm))
+		{
+			return true;
+		}
+		return false;
+	}
+
+}
